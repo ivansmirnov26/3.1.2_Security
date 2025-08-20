@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,33 +12,20 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private long id;
-    @Column
+
     private String name;
 
-    @Column
     private String surname;
 
-    @Column
     private String password;
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
 
     @Getter
     @ManyToMany(fetch = FetchType.LAZY)
@@ -55,16 +43,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void setRoles(Set<Role> roles) {
-
-        this.roles = roles;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
+    // Методы UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.getRoles();
@@ -102,8 +81,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
     }
@@ -111,5 +94,16 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, surname, password, roles);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
